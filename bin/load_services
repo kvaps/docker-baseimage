@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Services loading script.
+#
+# Usage:
+#     load_services [DIRECTORY]
+#
+
+config_name="services"
+
+# Checking config
+if [ ! -z $1 ]; then
+    config_dir="$1"
+elif [ -d $config_name ]; then
+    config_dir="$config_name"
+elif [ -d /etc/$config_name ]; then
+    config_dir="/etc/$config_name"
+fi
+
+# Error if config not found
+if [ ! -d "$config_dir" ]; then
+    [ -z $config_dir ] && unset $config_dir
+    >&2 echo "$0: Cannot load ${config_dir:=$config_name}: directory does not exist."
+    exit 1
+fi
