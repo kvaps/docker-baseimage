@@ -3,12 +3,14 @@
 # Services loading script.
 #
 # Usage:
-#     load_services [DIRECTORY]
+#     load_services [DIRECTORY] [CONFIG]
 #
 
+config_name="supervisord.conf"
+config_path="/etc/supervisor/conf.d"
 services_name="services"
 
-# Checking config
+# Checking services dir
 if [ ! -z $1 ]; then
     services_dir="$1"
 elif [ -d $services_name ]; then
@@ -16,6 +18,30 @@ elif [ -d $services_name ]; then
 elif [ -d /etc/$services_name ]; then
     services_dir="/etc/$services_name"
 fi
+
+# Checking config
+if [ ! -z $2 ]; then
+    config_file="$2"
+elif [ -d $config_path ]; then
+    config_file="$config_path/$config_name"
+else
+    config_file="supervisord.conf"
+fi
+
+# Create config
+if [ ! -d $config_file ]; then
+    touch $config_file || exit 1
+else
+    >&2 echo "$0: Error $config_file is directory."
+exit 1
+fi
+
+#  Write main section
+cat > $config_file <<EOT
+[supervisord]
+nodaemon=true
+
+EOT
 
 # Error if config not found
 if [ ! -d "$services_dir" ]; then
@@ -46,5 +72,12 @@ for service_var in ${services[@],,} ; do
         >&2 echo "$0: File $service_var.runit not found in $services_dir/$service_name/"
         exit 1
     fi
+
+    # Write service to config
+    cat >> $config_file <<EOT
+[program:${service_name}]
+command=${service_runit}
+
+EOT
 
 done
