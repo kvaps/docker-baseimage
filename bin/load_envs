@@ -3,7 +3,7 @@
 # Default environment variables loading script.
 #
 # Usage:
-#     load_defaults [CONFIG]
+#     load_envs CONFIG
 #
 
 chk_env() {
@@ -16,7 +16,7 @@ chk_env() {
     export "$1"="$val"
 }
 
-config_name="load_defaults.conf"
+config_name="load_envs.conf"
 prefix="DEFAULT_"
 
 # Checking config

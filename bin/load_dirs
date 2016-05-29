@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Directories mapping script.
+# Directories loading script.
 #
 # Usage:
-#    map_dirs [CONFIG]
+#    load_dirs CONFIG
 #
 
 print_spaces() {
@@ -11,7 +11,7 @@ print_spaces() {
     eval 'printf "%0.s " {1..'$spaces_count'}'
 }
 
-config_name="map_dirs.conf"
+config_name="load_dirs.conf"
 
 # Checking config
 if [ ! -z $1 ]; then
