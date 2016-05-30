@@ -43,7 +43,7 @@ nodaemon=true
 
 EOT
 
-# Error if config not found
+# Error if services directory not found
 if [ ! -d "$services_dir" ]; then
     [ -z $services_dir ] && unset $services_dir
     >&2 echo "$0: Cannot load ${services_dir:=$services_name}: directory does not exist."

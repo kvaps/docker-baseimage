@@ -3,7 +3,7 @@
 # Directories loading script.
 #
 # Usage:
-#    load_dirs CONFIG
+#    load_dirs [CONFIG]
 #
 
 print_spaces() {

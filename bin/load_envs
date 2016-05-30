@@ -3,7 +3,7 @@
 # Default environment variables loading script.
 #
 # Usage:
-#     load_envs CONFIG
+#     load_envs [CONFIG]
 #
 
 chk_env() {
