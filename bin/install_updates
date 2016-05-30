@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# Updates installing script.
+#
+# Usage:
+#     install_updates [DIRECTORY] [CONFIG]
+#
+
+config_name="version.conf"
+updates_name="update_scripts"
+
+# Checking updates dir
+if [ ! -z $1 ]; then
+    updates_dir="$1"
+elif [ -d $updates_name ]; then
+    updates_dir="$updates_name"
+elif [ -d /etc/$updates_name ]; then
+    updates_dir="/etc/$updates_name"
+fi
+
+# Checking version config
+if [ ! -z $2 ]; then
+    config_file="$2"
+elif [ -f $config_name ]; then
+    config_file="$config_name"
+elif [ -f /etc/$config_name ]; then
+    config_file="/etc/$config_name"
+fi
+
+# Error if updates directory not found
+if [ ! -d "$updates_dir" ]; then
+    [ -z $updates_dir ] && unset $updates_dir
+    >&2 echo "$0: Cannot load ${updates_dir:=$updates_name}: directory does not exist."
+    exit 1
+fi
+
+updates=($(ls -1v $updates_dir))
+cur_update=$(cat $config_file 2> /dev/null)
+
+act_updates=($(
+    act_update=false
+    for update in "${updates[@]}" ; do
+        [ "$cur_update" == "$update" ] && act_update=true
+        [ "$act_update" == "true" ] && echo $update
+    done
+))
+
+install_updates=($(
+    if [ ! -z "${act_updates}" ]; then
+        echo "${act_updates[@]:1}"
+    elif [ ! -f $config_file ]; then
+        echo "${updates[@]}"
+    else
+        >&2 echo "$0: Current version file \"$cur_update\" does found in $updates_dir"
+        exit 1
+    fi
+))
+    
+
+# Installing updates
+for update in "${install_updates[@]}" ; do
+    if [ "$update" != "$cur_update" ]; then
+        echo "Installing update: ${update}"
+        echo "$update" > $config_file
+    fi
+done
