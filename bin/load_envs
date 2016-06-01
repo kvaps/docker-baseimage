@@ -43,6 +43,7 @@ envs=$(env | grep $prefix | cut -d= -f1 | cut -c $[${#prefix}+1]- )
 
 # Checkinkg envs
 for env in ${envs[@]}; do
-    eval 'chk_env "'$env'" "$'${prefix}${env}'"'
-    unset "${prefix}${env}"
+    eval def_env="${prefix}${env}"
+    eval 'chk_env "'$env'" "$'${def_env}'"'
+    unset "$def_env"
 done
