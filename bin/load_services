@@ -8,7 +8,6 @@
 
 script_name="$(basename $0)"
 config_name="supervisord.conf"
-config_path="/etc/supervisor/conf.d"
 services_name="service"
 
 # Checking services dir
@@ -23,18 +22,16 @@ fi
 # Checking config
 if [ ! -z $2 ]; then
     config_file="$2"
-elif [ -d $config_path ]; then
-    config_file="$config_path/$config_name"
-else
-    config_file="supervisord.conf"
+elif [ -f $config_name ]; then
+    config_file="$config_name"
+elif [ -f /etc/$config_name ]; then
+    config_file="/etc/$config_name"
 fi
 
 # Create config
-if [ ! -d $config_file ]; then
+if [ ! -e "$config_file" ]; then
+    config_file="$config_name"
     touch $config_file || exit 1
-else
-    >&2 echo "${script_name}: Error $config_file is directory."
-exit 1
 fi
 
 #  Write main section
