@@ -6,6 +6,7 @@
 #     install_updates [DIRECTORY] [CONFIG]
 #
 
+script_name="$(basename $0)"
 config_name="version.conf"
 updates_name="update_scripts"
 
@@ -30,7 +31,7 @@ fi
 # Error if updates directory not found
 if [ ! -d "$updates_dir" ]; then
     [ -z $updates_dir ] && unset $updates_dir
-    >&2 echo "$0: Cannot load ${updates_dir:=$updates_name}: directory does not exist."
+    >&2 echo "${script_name}: Cannot load ${updates_dir:=$updates_name}: directory does not exist."
     exit 1
 fi
 
@@ -51,7 +52,7 @@ install_updates=($(
     elif [ ! -f $config_file ]; then
         echo "${updates[@]}"
     else
-        >&2 echo "$0: Current version file \"$cur_update\" does found in $updates_dir"
+        >&2 echo "${script_name}: Current version file \"$cur_update\" does found in $updates_dir"
         exit 1
     fi
 ))

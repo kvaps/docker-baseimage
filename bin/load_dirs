@@ -11,6 +11,7 @@ print_spaces() {
     eval 'printf "%0.s " {1..'$spaces_count'}'
 }
 
+script_name="$(basename $0)"
 config_name="load_dirs.conf"
 
 # Checking config
@@ -24,7 +25,7 @@ fi
 
 # Error if config not found
 if [ ! -f "$config_file" ]; then
-    >&2 echo "$0: Cannot load ${config_file:=$config_name}: file does not exist."
+    >&2 echo "${script_name}: Cannot load ${config_file:=$config_name}: file does not exist."
     exit 1
 fi
 
@@ -55,13 +56,14 @@ for storage in "${VOLUMES[@]}"; do
            echo -n '(copy) '
            cp -Lrp $dir ${newdir} || exit 1
        fi
+
        echo -n '(link) '
 
        # If $dir is symbolyc link
        if [ -L $dir ]; then
            linkdir="$(readlink $dir)"
            if [ "$linkdir" = "$newdir" ]; then
-               >&2 echo '$0: duplicate dirname!'
+               >&2 echo "${script_name}: duplicate name!"
                exit 1
            else
                rm -rf $linkdir

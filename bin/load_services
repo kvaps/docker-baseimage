@@ -6,6 +6,7 @@
 #     load_services [DIRECTORY] [CONFIG]
 #
 
+script_name="$(basename $0)"
 config_name="supervisord.conf"
 config_path="/etc/supervisor/conf.d"
 services_name="services"
@@ -32,7 +33,7 @@ fi
 if [ ! -d $config_file ]; then
     touch $config_file || exit 1
 else
-    >&2 echo "$0: Error $config_file is directory."
+    >&2 echo "${script_name}: Error $config_file is directory."
 exit 1
 fi
 
@@ -46,7 +47,7 @@ EOT
 # Error if services directory not found
 if [ ! -d "$services_dir" ]; then
     [ -z $services_dir ] && unset $services_dir
-    >&2 echo "$0: Cannot load ${services_dir:=$services_name}: directory does not exist."
+    >&2 echo "${script_name}: Cannot load ${services_dir:=$services_name}: directory does not exist."
     exit 1
 fi
 
@@ -57,19 +58,19 @@ for service_var in ${services[@],,} ; do
     service_name=$(ls $services_dir -1 | grep -iP "$service_mask")
 
     if $(echo $service_name | grep -q ' '); then
-        >&2 echo "$0: Duplicate services: $(echo $service_name)"
+        >&2 echo "${script_name}: Duplicate services: $(echo $service_name)"
         exit 1
     fi
 
     if [ -z "$service_name" ]; then
-        >&2 echo "$0: Service $service_var not found in $services_dir"
+        >&2 echo "${script_name}: Service $service_var not found in $services_dir"
         exit 1
     fi
 
     service_runit="$services_dir/$service_name/$service_name.runit"
 
     if [ ! -f $service_runit ]; then
-        >&2 echo "$0: File $service_var.runit not found in $services_dir/$service_name/"
+        >&2 echo "${script_name}: File $service_var.runit not found in $services_dir/$service_name/"
         exit 1
     fi
 

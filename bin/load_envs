@@ -10,12 +10,13 @@ chk_env() {
     eval env="\$$1"
     val="${env:-$2}"
     if [ -z "$val" ]; then
-        >&2 echo "$0: Enviroment vaiable \$$1 is not set."
+        >&2 echo "${script_name}: Enviroment vaiable \$$1 is not set."
         exit 1
     fi  
     export "$1"="$val"
 }
 
+script_name="$(basename $0)"
 config_name="load_envs.conf"
 prefix="DEFAULT_"
 
@@ -30,7 +31,7 @@ fi
 
 # Error if config not found
 if [ ! -f "$config_file" ]; then
-    >&2 echo "$0: Cannot load ${config_file:=$config_name}: file does not exist."
+    >&2 echo ${script_name}": Cannot load ${config_file:=$config_name}: file does not exist."
     exit 1
 fi
 
