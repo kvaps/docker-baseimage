@@ -7,10 +7,10 @@
 source load_envs
 
 # Load directories
-load_dirs
+source load_dirs
 
 # Load services
-load_services
+source load_services
 
 # Install updates if neded
 install_updates
