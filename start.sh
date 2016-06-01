@@ -4,7 +4,7 @@
 #
 
 # Load default environment variables
-load_envs
+source load_envs
 
 # Load directories
 load_dirs
