@@ -7,7 +7,7 @@
 #
 
 print_spaces() {
-    spaces_count=$( echo $2 - ${#1} | bc)
+    spaces_count=$[ $2 - ${#1} ]
     eval 'printf "%0.s " {1..'$spaces_count'}'
 }
 
@@ -44,7 +44,7 @@ for storage in "${VOLUMES[@]}"; do
 
     for dir in "${configdirs[@]}" "${userdirs[@]}"; do
        dirname=$(basename $dir)
-       newdir="/${storage}${dirname}"
+       newdir="/${storage}/${dirname}"
 
        echo -en "$storage"
        print_spaces $storage 10
