@@ -9,7 +9,7 @@
 script_name="$(basename $0)"
 config_name="supervisord.conf"
 config_path="/etc/supervisor/conf.d"
-services_name="services"
+services_name="service"
 
 # Checking services dir
 if [ ! -z $1 ]; then
@@ -67,10 +67,10 @@ for service_var in ${services[@],,} ; do
         exit 1
     fi
 
-    service_runit="$services_dir/$service_name/$service_name.runit"
+    service_runit="$services_dir/$service_name/run"
 
     if [ ! -f $service_runit ]; then
-        >&2 echo "${script_name}: File $service_var.runit not found in $services_dir/$service_name/"
+        >&2 echo "${script_name}: File not found in $services_dir/$service_name/run"
         exit 1
     fi
 
