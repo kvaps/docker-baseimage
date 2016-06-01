@@ -53,26 +53,24 @@ for storage in "${VOLUMES[@]}"; do
 
        if [ ! -e ${newdir} ]; then
            echo -n '(copy) '
-           #cp -Lrp $dir ${newdir} || exit 1
+           cp -Lrp $dir ${newdir} || exit 1
        fi
-       if [ ! -e ${newdir} ]; then
-           echo -n '(link) '
+       echo -n '(link) '
 
-           # If $dir is symbolyc link
-           if [ -L $dir ]; then
-               linkdir="$(readlink $dir)"
-               if [ "$linkdir" = "$newdir" ]; then
-                   >&2 echo '$0: duplicate dirname!'
-                   exit 1
-               else
-                   rm -rf $linkdir
-                   ln -s $newdir $linkdir || exit 1
-               fi
+       # If $dir is symbolyc link
+       if [ -L $dir ]; then
+           linkdir="$(readlink $dir)"
+           if [ "$linkdir" = "$newdir" ]; then
+               >&2 echo '$0: duplicate dirname!'
+               exit 1
+           else
+               rm -rf $linkdir
+               ln -s $newdir $linkdir || exit 1
            fi
-
-           rm -rf $dir
-           ln -s $newdir $dir || exit 1
        fi
+
+       rm -rf $dir
+       ln -s $newdir $dir || exit 1
        echo
 
     done
