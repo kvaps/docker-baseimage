@@ -64,14 +64,14 @@ for storage in "${VOLUMES[@]}"; do
                if [ "$linkdir" = "$newdir" ]; then
                    >&2 echo '$0: duplicate dirname!'
                    exit 1
-               #else
-                   #rm -rf $linkdir
-                   #ln -s $newdir $linkdir || exit 1
+               else
+                   rm -rf $linkdir
+                   ln -s $newdir $linkdir || exit 1
                fi
            fi
 
-           #rm -rf $dir
-           #ln -s $newdir $dir || exit 1
+           rm -rf $dir
+           ln -s $newdir $dir || exit 1
        fi
        echo
 

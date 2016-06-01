@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Example start.sh script
+#
 
 # Load default environment variables
 load_envs
