@@ -52,7 +52,7 @@ services=($(env | grep -oP '(?<=^SERVICE_)[a-zA-Z0-9_]*(?==(?i:true|1))'))
 
 for service_var in ${services[@],,} ; do
     service_mask=$(echo $service_var | sed 's/_/.?/g')
-    service_name=$(ls $services_dir -1 | grep -iP "$service_mask")
+    service_name=$(ls $services_dir -1 | grep -iE "^$service_mask$")
 
     if $(echo $service_name | grep -q ' '); then
         >&2 echo "${script_name}: Duplicate services: $(echo $service_name)"
