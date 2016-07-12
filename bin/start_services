@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Services starting script. (for systemd)
+#
+# Usage:
+#     start_services
+#
+
+script_name="$(basename $0)"
+
+services=($(env | grep -oP '(?<=^SERVICE_)[a-zA-Z0-9_]*(?==(?i:true|1))'))
+
+for service_var in ${services[@],,} ; do
+    service_mask=$(echo $service_var | sed 's/_/.?/g')
+    service_name=$(systemctl list-units | grep -oP '^[a-zA-Z-_@]*(?=.service)' | grep -iP "$service_mask")
+
+    if $(echo $service_name | grep -q ' '); then
+        >&2 echo "${script_name}: Duplicate services: $(echo $service_name)"
+        exit 1
+    fi
+
+    if [ -z "$service_name" ]; then
+        >&2 echo "${script_name}: Service $service_var not found"
+        exit 1
+    fi
+
+    systemctl start $service_name.service
+done
