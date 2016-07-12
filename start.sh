@@ -4,10 +4,10 @@
 #
 
 # Load default environment variables
-source load_envs
+load_envs || exit 1
 
 # Load directories
-source load_dirs
+load_dirs || exit 1
 
 # Install updates if neded
 install_updates
