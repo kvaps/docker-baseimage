@@ -9,7 +9,7 @@ Before=shutdown.target
 [Service]
 Environment=HOME=/root
 WorkingDirectory=/root
-ExecStart=-/bin/bash -c "[ -f /bin/start.sh ] && /bin/start.sh || /bin/bash ; /usr/sbin/poweroff"
+ExecStart=-/bin/bash -c "trap poweroff EXIT ; if [ -f /bin/start.sh ]; then /bin/start.sh; else /bin/bash; fi"
 Type=idle
 StandardInput=tty-force
 StandardOutput=inherit
