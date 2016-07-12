@@ -4,16 +4,16 @@
 #
 
 # Load default environment variables
-source load_envs
+load_envs || exit 1
 
 # Load directories
-source load_dirs
+load_dirs || exit 1
 
 # Install updates if neded
 install_updates
 
 # Start services
-source start_services
+start_services || exit 1
 
 # Enable output from logfile and hold
 #journalctl -u nginx.service -f
