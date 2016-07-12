@@ -14,3 +14,6 @@ install_updates
 
 # Enable output from logfile
 #tail -f -n0 /var/log/messages | grep ' rsyslogd: ' &
+
+# Start your program here
+#your_command
