@@ -1,11 +1,11 @@
 FROM centos:centos7
 MAINTAINER kvaps <kvapss@gmail.com>
 
-ENTRYPOINT [ '/usr/lib/systemd/systemd' ]
+ENTRYPOINT ["/usr/lib/systemd/systemd"]
 
 ENV container docker
 
-ADD start.service /etc/systemd/system/start.service
+ADD etc/systemd/system/start.service /etc/systemd/system/start.service
 
 RUN rm -f /usr/lib/systemd/system/sysinit.target.wants/sys-fs-fuse-connections.mount \
  && rm -f /usr/lib/systemd/system/local-fs.target.wants/systemd-remount-fs.service \
