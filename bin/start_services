@@ -12,7 +12,7 @@ services=($(env | grep -oP '(?<=^SERVICE_)[a-zA-Z0-9_]*(?==(?i:true|1))'))
 
 for service_var in ${services[@],,} ; do
     service_mask=$(echo $service_var | sed 's/_/.?/g')
-    service_name=$(systemctl list-units | grep -oP '^[a-zA-Z-_@]*(?=.service)' | grep -iP "$service_mask")
+    service_name=$(systemctl list-units | grep -oP '^[a-zA-Z-_@]*(?=.service)' | grep -iE "^$service_mask$")
 
     if $(echo $service_name | grep -q ' '); then
         >&2 echo "${script_name}: Duplicate services: $(echo $service_name)"
