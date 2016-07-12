@@ -16,5 +16,3 @@ RUN rm -f /usr/lib/systemd/system/sysinit.target.wants/sys-fs-fuse-connections.m
 
 ADD bin/* /bin/
 ADD etc/* /etc/
-
-ADD start.sh /bin/start.sh
