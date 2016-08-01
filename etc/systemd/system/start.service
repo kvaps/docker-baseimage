@@ -1,15 +1,19 @@
 [Unit]
-Description=Rescue Shell
-Documentation=man:sulogin(8)
+Description=Init docker script
 DefaultDependencies=no
 Conflicts=shutdown.target
 After=sysinit.target plymouth-start.service
 Before=shutdown.target
 
 [Service]
-Environment=HOME=/root
-WorkingDirectory=/root
-ExecStart=-/bin/bash -c "trap poweroff EXIT ; if [ -f /bin/start.sh ]; then /bin/start.sh; else /bin/bash; fi"
+EnvironmentFile=/etc/environment
+ExecStart=-/bin/bash -c "\
+echo --------------------------------------------------------------------------------; \
+trap poweroff EXIT; \
+source /etc/environment; \
+if [ -f /bin/start.sh ]; then /bin/start.sh; else /bin/bash; fi; \
+echo --------------------------------------------------------------------------------; \
+"
 Type=idle
 StandardInput=tty-force
 StandardOutput=inherit
