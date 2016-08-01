@@ -39,7 +39,7 @@ fi
 eval export $(cat $config_file | sed -e '/^\#/d' -e '/^$/d' -e 's/^/ /' | tr '\n' ' ' | sed -E 's/ ([a-z2A-Z0-9_]+=\S)/ '$prefix'\1/g')
 
 # Getting loaded envs
-envs=$(env | grep $prefix | cut -d= -f1 | cut -c $[${#prefix}+1]- )
+envs=$(env | grep \^$prefix | cut -d= -f1 | cut -c $[${#prefix}+1]- )
 
 # Checkinkg envs
 for env in ${envs[@]}; do
