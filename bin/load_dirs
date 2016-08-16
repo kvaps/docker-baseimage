@@ -51,7 +51,7 @@ else
            echo -en "$dirname"
            print_spaces $dirname 25
     
-           if [ ! -e ${newdir} ]; then
+           if [ ! -e ${newdir} ] && [ -e ${dir} ]; then
                echo -n '(copy) '
                cp -Lrp $dir ${newdir} || exit 1
            fi
