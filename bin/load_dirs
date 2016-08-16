@@ -26,54 +26,54 @@ fi
 # Error if config not found
 if [ ! -f "$config_file" ]; then
     >&2 echo "${script_name}: Cannot load ${config_file:=$config_name}: file does not exist."
-    exit 1
-fi
+else
 
-# Load config
-source $config_file
-
-# Start mapping directories
-echo "STORAGE   FOLDER                   ACTION"
-echo "------------------------------------------------"
-for storage in "${VOLUMES[@]}"; do
-
-    # Default config dirs
-    configdirs=($(eval echo '${VOLUME_'${storage^^}'[@]}'))
-
-    # User definded dirs
-    userdirs=($(env | grep -P '^'${storage^^}'_DIR_[0-9]+=' | cut -d= -f2-))
-
-    for dir in "${configdirs[@]}" "${userdirs[@]}"; do
-       dirname=$(basename $dir)
-       newdir="/${storage}/${dirname}"
-
-       echo -en "$storage"
-       print_spaces $storage 10
-       echo -en "$dirname"
-       print_spaces $dirname 25
-
-       if [ ! -e ${newdir} ]; then
-           echo -n '(copy) '
-           cp -Lrp $dir ${newdir} || exit 1
-       fi
-
-       echo -n '(link) '
-
-       # If $dir is symbolyc link
-       if [ -L $dir ]; then
-           linkdir="$(readlink $dir)"
-           if [ "$linkdir" = "$newdir" ]; then
-               >&2 echo "${script_name}: duplicate name!"
-               exit 1
-           else
-               rm -rf $linkdir
-               ln -s $newdir $linkdir || exit 1
+    # Load config
+    source $config_file
+    
+    # Start mapping directories
+    echo "STORAGE   FOLDER                   ACTION"
+    echo "------------------------------------------------"
+    for storage in "${VOLUMES[@]}"; do
+    
+        # Default config dirs
+        configdirs=($(eval echo '${VOLUME_'${storage^^}'[@]}'))
+    
+        # User definded dirs
+        userdirs=($(env | grep -P '^'${storage^^}'_DIR_[0-9]+=' | cut -d= -f2-))
+    
+        for dir in "${configdirs[@]}" "${userdirs[@]}"; do
+           dirname=$(basename $dir)
+           newdir="/${storage}/${dirname}"
+    
+           echo -en "$storage"
+           print_spaces $storage 10
+           echo -en "$dirname"
+           print_spaces $dirname 25
+    
+           if [ ! -e ${newdir} ] && [ -e ${dir} ]; then
+               echo -n '(copy) '
+               cp -Lrp $dir ${newdir} || exit 1
            fi
-       fi
-
-       rm -rf $dir
-       ln -s $newdir $dir || exit 1
-       echo
-
+    
+           echo -n '(link) '
+    
+           # If $dir is symbolyc link
+           if [ -L $dir ]; then
+               linkdir="$(readlink $dir)"
+               if [ "$linkdir" = "$newdir" ]; then
+                   >&2 echo "${script_name}: duplicate name!"
+                   exit 1
+               else
+                   rm -rf $linkdir
+                   ln -s $newdir $linkdir || exit 1
+               fi
+           fi
+    
+           rm -rf $dir
+           ln -s $newdir $dir || exit 1
+           echo
+    
+        done
     done
-done
+fi
