@@ -5,13 +5,9 @@ ENTRYPOINT ["/bin/bash", "-c", "env > /etc/environment; exec /usr/lib/systemd/sy
 
 ENV container docker
 
-ADD etc/systemd/system/*.service /etc/systemd/system/
+ADD etc/systemd/system/start.service /etc/systemd/system/start.service
 
-RUN rm -f /usr/lib/systemd/system/sysinit.target.wants/sys-fs-fuse-connections.mount \
- && rm -f /usr/lib/systemd/system/local-fs.target.wants/systemd-remount-fs.service \
- && rm -f /usr/lib/systemd/system/multi-user.target.wants/systemd-logind.service \
- && rm -f /etc/systemd/system/getty.target.wants/getty\@tty1.service \
- && rm -f /usr/lib/systemd/system/multi-user.target.wants/getty.target \
+RUN systemctl mask sys-fs-fuse-connections.mount systemd-remount-fs.service systemd-logind.service getty@tty1.service console-getty.service \
  && systemctl enable start.service
 
 ADD bin/* /bin/
