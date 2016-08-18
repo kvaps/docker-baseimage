@@ -9,10 +9,11 @@
 script_name="$(basename $0)"
 
 services=($(env | grep -oP '(?<=^SERVICE_)[a-zA-Z0-9_]*(?==(?i:true|1))'))
+services_files=($((find /etc/systemd/system -name *.service -exec basename {} \;; find /usr/lib/systemd/system -name *.service -exec basename {} \;) | sort -u))
 
-for service_var in ${services[@],,} ; do
+start_services="$(for service_var in ${services[@],,} ; do
     service_mask=$(echo $service_var | sed 's/_/.?/g')
-    service_name=$(systemctl list-units | grep -oP '^[a-zA-Z-_@]*(?=.service)' | grep -iE "^$service_mask$")
+    service_name=$(echo " ${services_files[@]} " | grep -oP "(?<= )$service_mask(?=.service )")
 
     if $(echo $service_name | grep -q ' '); then
         >&2 echo "${script_name}: Duplicate services: $(echo $service_name)"
@@ -24,5 +25,8 @@ for service_var in ${services[@],,} ; do
         exit 1
     fi
 
-    systemctl start $service_name.service
+    echo $service_name.service
 done
+)"
+
+systemctl start $start_services
