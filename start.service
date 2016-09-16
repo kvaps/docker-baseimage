@@ -1,9 +1,5 @@
 [Unit]
 Description=Init docker script
-DefaultDependencies=no
-Conflicts=shutdown.target
-After=sysinit.target plymouth-start.service
-Before=shutdown.target
 
 [Service]
 EnvironmentFile=/etc/environment
@@ -23,4 +19,4 @@ IgnoreSIGPIPE=no
 SendSIGHUP=yes
 
 [Install]
-WantedBy=getty.target
+WantedBy=start.target
