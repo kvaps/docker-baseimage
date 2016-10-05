@@ -33,7 +33,7 @@ else
     
     # Start mapping directories
     echo "STORAGE   FOLDER                   ACTION"
-    echo "------------------------------------------------"
+    echo "--------------------------------------------------------------------------------"
     for storage in "${VOLUMES[@]}"; do
     
         # Default config dirs
@@ -61,10 +61,7 @@ else
            # If $dir is symbolyc link
            if [ -L $dir ]; then
                linkdir="$(readlink $dir)"
-               if [ "$linkdir" = "$newdir" ]; then
-                   >&2 echo "${script_name}: link already exist!"
-                   exit 1
-               else
+               if [ "$linkdir" != "$newdir" ]; then
                    rm -f $dir
                    rm -rf $linkdir
                    ln -s $newdir $dir || exit 1
