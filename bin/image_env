@@ -3,7 +3,7 @@
 # Default environment variables loading script.
 #
 # Usage:
-#     load_envs [CONFIG]
+#     image_env [CONFIG]
 #
 
 chk_env() {
@@ -17,7 +17,7 @@ chk_env() {
 }
 
 script_name="$(basename $0)"
-config_name="load_envs.conf"
+config_name="env.conf.sh"
 prefix="DEFAULT_"
 
 # Checking config
@@ -25,8 +25,8 @@ if [ ! -z $1 ]; then
     config_file="$1"
 elif [ -f $config_name ]; then
     config_file="$config_name"
-elif [ -f /etc/$config_name ]; then
-    config_file="/etc/$config_name"
+elif [ -f /etc/image/$config_name ]; then
+    config_file="/etc/image/$config_name"
 fi
 
 # Error if config not found

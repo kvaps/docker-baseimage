@@ -8,10 +8,10 @@ ENV container docker
 RUN find /etc/systemd/system/* '!' -name '*.wants' | xargs rm -rvf \
  && for i in basic.target sysinit.target network.service netconsole.service ; do rm -f /usr/lib/systemd/system/$i && ln -s /dev/null /usr/lib/systemd/system/$i ; done
 
-ADD start.target start.service /usr/lib/systemd/system/
+ADD docker-container.target start.service /usr/lib/systemd/system/
 
-RUN systemctl set-default start.target \
+RUN systemctl set-default docker-container.target \
  && systemctl enable start.service
 
-ADD bin/* /bin/
-ADD etc/* /etc/
+ADD bin/ /bin/
+ADD etc/ /etc/

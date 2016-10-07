@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Directories loading script.
+# Persistent data binding script.
 #
 # Usage:
-#    load_dirs [CONFIG]
+#    load_stor [CONFIG]
 #
 
 print_spaces() {
@@ -12,15 +12,15 @@ print_spaces() {
 }
 
 script_name="$(basename $0)"
-config_name="load_dirs.conf"
+config_name="stor.conf.sh"
 
 # Checking config
 if [ ! -z $1 ]; then
     config_file="$1"
 elif [ -f $config_name ]; then
     config_file="$config_name"
-elif [ -f /etc/$config_name ]; then
-    config_file="/etc/$config_name"
+elif [ -f /etc/image/$config_name ]; then
+    config_file="/etc/image/$config_name"
 fi
 
 # Error if config not found

@@ -3,20 +3,20 @@
 # Updates installing script.
 #
 # Usage:
-#     install_updates [DIRECTORY] [CONFIG]
+#     image_update [DIRECTORY] [CONFIG]
 #
 
 script_name="$(basename $0)"
 config_name="version.conf"
-updates_name="update_scripts"
+updates_name="update"
 
 # Checking updates dir
 if [ ! -z $1 ]; then
     updates_dir="$1"
 elif [ -d $updates_name ]; then
     updates_dir="$updates_name"
-elif [ -d /etc/$updates_name ]; then
-    updates_dir="/etc/$updates_name"
+elif [ -d /etc/image/$updates_name ]; then
+    updates_dir="/etc/image/$updates_name"
 fi
 
 # Checking version config
@@ -24,8 +24,8 @@ if [ ! -z $2 ]; then
     config_file="$2"
 elif [ -f $config_name ]; then
     config_file="$config_name"
-elif [ -f /etc/$config_name ]; then
-    config_file="/etc/$config_name"
+elif [ -f /etc/image/$config_name ]; then
+    config_file="/etc/image/$config_name"
 fi
 
 # Error if updates directory not found

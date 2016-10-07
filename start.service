@@ -19,4 +19,4 @@ IgnoreSIGPIPE=no
 SendSIGHUP=yes
 
 [Install]
-WantedBy=start.target
+WantedBy=docker-container.target

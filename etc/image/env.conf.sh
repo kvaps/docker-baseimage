@@ -1,5 +1,3 @@
-#!/bin/bash
-#
 # Default environment variables loading config.
 #
 # Example:

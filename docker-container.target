@@ -1,5 +1,5 @@
 [Unit]
-Description=Init docker target
+Description=Docker container target
 DefaultDependencies=false
 AllowIsolate=yes
 Requires=systemd-tmpfiles-setup.service systemd-journald.service dbus.service

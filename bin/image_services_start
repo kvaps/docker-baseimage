@@ -3,7 +3,7 @@
 # Services starting script. (for systemd)
 #
 # Usage:
-#     start_services
+#     image_services_start
 #
 
 script_name="$(basename $0)"

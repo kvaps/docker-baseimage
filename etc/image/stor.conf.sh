@@ -1,6 +1,4 @@
-#!/bin/bash
-#
-# Directories loading config.
+# Persistent data binding config.
 #
 # Example:
 #   VOLUMES=(config data log)  - Define /config, /data and /log volumes
@@ -13,5 +11,5 @@
 VOLUMES=(config)
 
 VOLUME_CONFIG=(
-    /etc/version.conf
+    /etc/image/version.conf
 )
