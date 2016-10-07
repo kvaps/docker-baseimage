@@ -1,7 +1,7 @@
 FROM centos:centos7
 MAINTAINER kvaps <kvapss@gmail.com>
 
-ENTRYPOINT ["/bin/bash", "-c", "env > /etc/environment; exec /usr/sbin/init"]
+ENTRYPOINT ["/bin/sh", "-c", "env > /etc/environment; exec /usr/sbin/init"]
 
 ENV container docker
 
