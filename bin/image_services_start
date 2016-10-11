@@ -29,4 +29,5 @@ start_services="$(for service_var in ${services[@],,} ; do
 done
 )"
 
+echo systemctl start $start_services
 systemctl start $start_services
