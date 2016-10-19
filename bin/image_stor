@@ -31,46 +31,66 @@ else
     # Load config
     source $config_file
     
-    # Start mapping directories
-    echo "STORAGE   FOLDER                   ACTION"
+    # Start mapping directories (targets)
+    echo "STORAGE   TARGET                                       ACTION"
     echo "--------------------------------------------------------------------------------"
     for storage in "${VOLUMES[@]}"; do
     
         # Default config dirs
         configdirs=($(eval echo '${VOLUME_'${storage^^}'[@]}'))
+        stripnum="$(eval echo '$VOLUME_'${storage^^}'_STRIP')"
+        stripnum="${stripnum:-1}"
     
         # User definded dirs
         userdirs=($(env | grep -P '^'${storage^^}'_DIR_[0-9]+=' | cut -d= -f2-))
     
         for dir in "${configdirs[@]}" "${userdirs[@]}"; do
-           dirname=$(basename $dir)
-           newdir="/${storage}/${dirname}"
+           # Calculate dirname
+           dirname=$(echo "$dir" | sed 's|^/\([^/]*/\)\{'${stripnum}'\}|/|')
+           [ "$diname" == "$dir" ] && dirname="$(basename $dir)"
+
+           newdir="/${storage}${dirname}"
     
            echo -en "$storage"
            print_spaces $storage 10
-           echo -en "$dirname"
-           print_spaces $dirname 25
+           echo -en "$dir"
+           print_spaces $dirname 40
     
            if [ ! -e ${newdir} ] && [ -e ${dir} ]; then
                echo -n '(copy) '
+
+               # Create parent folder if not exist, and copy permissions
+               if [ ! -d $(dirname $newdir) ]; then
+                   parentnewdir=$(dirname $newdir)
+                   i="$parentnewdir"
+                   until [ -d $i ]; do parentnewdir=$i; i=$(dirname $i); done
+                   rootdir="$(echo $dir| grep -oP '^(/[^/]*){'${stripnum}'}')"
+                   rootdir="${rootdir:-$(dirname $dir)}"
+                   parentdir=$(echo $parentnewdir | sed "s|^${storage}|${rootdir}|")
+
+                   mkdir -p $(dirname $newdir)
+                   chown -R --reference=$parentdir $parentnewdir || exit 1
+                   chmod -R --reference=$parentdir $parentnewdir || exit 1
+               fi
+
                cp -ar $(readlink -f $dir) ${newdir} || exit 1
            fi
-    
-           echo -n '(link) '
     
            # If $dir is symbolyc link
            if [ -L $dir ]; then
                linkdir="$(readlink $dir)"
                if [ "$linkdir" != "$newdir" ]; then
+                   echo -n '(skip) '
                    rm -f $dir
                    rm -rf $linkdir
                    ln -s $newdir $dir || exit 1
                    ln -s $newdir $linkdir || exit 1
                fi
+           else
+               echo -n '(link) '
+               rm -rf $dir
+               ln -s $newdir $dir || exit 1
            fi
-    
-           rm -rf $dir
-           ln -s $newdir $dir || exit 1
            echo
     
         done
