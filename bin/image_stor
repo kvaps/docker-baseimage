@@ -32,7 +32,7 @@ else
     source $config_file
     
     # Start mapping directories (targets)
-    echo "STORAGE   TARGET                                            ACTION"
+    echo "STORAGE   TARGET                                          ACTION"
     echo "--------------------------------------------------------------------------------"
     for storage in "${VOLUMES[@]}"; do
     
@@ -54,7 +54,7 @@ else
            echo -en "$storage"
            print_spaces $storage 10
            echo -en "$dir"
-           print_spaces $dirname 40
+           print_spaces $dir 48
     
            # Create parent folder if not exist, and copy permissions
            if [ ! -d $(dirname $newdir) ]; then
