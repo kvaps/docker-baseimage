@@ -32,7 +32,7 @@ else
     source $config_file
     
     # Start mapping directories (targets)
-    echo "STORAGE   TARGET                                       ACTION"
+    echo "STORAGE   TARGET                                            ACTION"
     echo "--------------------------------------------------------------------------------"
     for storage in "${VOLUMES[@]}"; do
     
@@ -56,23 +56,24 @@ else
            echo -en "$dir"
            print_spaces $dirname 40
     
+           # Create parent folder if not exist, and copy permissions
+           if [ ! -d $(dirname $newdir) ]; then
+               echo -n '(mkdir) '
+               parentnewdir=$(dirname $newdir)
+               i="$parentnewdir"
+               until [ -d $i ]; do parentnewdir=$i; i=$(dirname $i); done
+               rootdir="$(echo $dir| grep -oP '^(/[^/]*){'${stripnum}'}')"
+               rootdir="${rootdir:-$(dirname $dir)}"
+               parentdir=$(echo $parentnewdir | sed "s|^${storage}|${rootdir}|")
+
+               mkdir -p $(dirname $newdir)
+               chown -R --reference=$parentdir $parentnewdir || exit 1
+               chmod -R --reference=$parentdir $parentnewdir || exit 1
+           fi
+
+           # Copy target
            if [ ! -e ${newdir} ] && [ -e ${dir} ]; then
                echo -n '(copy) '
-
-               # Create parent folder if not exist, and copy permissions
-               if [ ! -d $(dirname $newdir) ]; then
-                   parentnewdir=$(dirname $newdir)
-                   i="$parentnewdir"
-                   until [ -d $i ]; do parentnewdir=$i; i=$(dirname $i); done
-                   rootdir="$(echo $dir| grep -oP '^(/[^/]*){'${stripnum}'}')"
-                   rootdir="${rootdir:-$(dirname $dir)}"
-                   parentdir=$(echo $parentnewdir | sed "s|^${storage}|${rootdir}|")
-
-                   mkdir -p $(dirname $newdir)
-                   chown -R --reference=$parentdir $parentnewdir || exit 1
-                   chmod -R --reference=$parentdir $parentnewdir || exit 1
-               fi
-
                cp -ar $(readlink -f $dir) ${newdir} || exit 1
            fi
     
