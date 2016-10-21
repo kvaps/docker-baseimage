@@ -24,7 +24,7 @@ if [ ! -z $2 ]; then
     config_file="$2"
 elif [ -f $config_name ]; then
     config_file="$config_name"
-elif [ -f /etc/image/$config_name ]; then
+else
     config_file="/etc/image/$config_name"
 fi
 
@@ -36,12 +36,12 @@ if [ ! -d "$updates_dir" ]; then
 fi
 
 updates=($(ls -1v $updates_dir))
-cur_update=$(cat $config_file 2> /dev/null)
+config_version=$(cat "$config_file" 2> /dev/null)
 
 act_updates=($(
     act_update=false
     for update in "${updates[@]}" ; do
-        [ "$cur_update" == "$update" ] && act_update=true
+        [ "$config_version" == "$update" ] && act_update=true
         [ "$act_update" == "true" ] && echo $update
     done
 ))
@@ -52,16 +52,16 @@ install_updates=($(
     elif [ ! -f $config_file ]; then
         echo "${updates[@]}"
     else
-        >&2 echo "${script_name}: Current version file \"$cur_update\" does found in $updates_dir"
+        >&2 echo "${script_name}: Current version file \"$config_version\" does found in $updates_dir"
         exit 1
     fi
 ))
-    
 
 # Installing updates
 for update in "${install_updates[@]}" ; do
-    if [ "$update" != "$cur_update" ]; then
+    if [ "$update" != "$config_version" ]; then
         echo "Installing update: ${update}"
+        ${updates_dir}/${update}
         echo "$update" > $config_file
     fi
 done
