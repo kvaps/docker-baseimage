@@ -9,7 +9,6 @@
 script_name="$(basename $0)"
 config_name="version.conf"
 updates_name="update"
-version_env=$VERSION
 
 # Checking updates dir
 if [ ! -z $1 ]; then
@@ -36,15 +35,7 @@ if [ ! -d "$updates_dir" ]; then
     exit 1
 fi
 
-if [ ! -e "$config_file" ]; then
-    if [ ! -z $version_env ]; then
-        config_version=$version_env
-        echo "$version_env" > "$config_file"
-    else
-        >&2 echo "${script_name}: ${config_name}: file does not exist, and \$VERSION variable is not set"
-        exit 1
-    fi
-else
+if [ ! -f "$config_file" ]; then
     config_version=$(cat "$config_file" 2> /dev/null)
 fi
 
@@ -73,7 +64,7 @@ install_updates=($(
 for update in "${install_updates[@]}" ; do
     if [ "$update" != "$config_version" ]; then
         echo "Installing update: ${update}"
-        ${updates_dir}/${update}
+        ${updates_dir}/${update} &&
         echo "$update" > $config_file
     fi
 done
