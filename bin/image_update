@@ -35,7 +35,7 @@ if [ ! -d "$updates_dir" ]; then
     exit 1
 fi
 
-if [ ! -f "$config_file" ]; then
+if [ -f "$config_file" ]; then
     config_version=$(cat "$config_file" 2> /dev/null)
 fi
 
