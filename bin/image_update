@@ -36,7 +36,12 @@ if [ ! -d "$updates_dir" ]; then
 fi
 
 if [ -f "$config_file" ]; then
-    config_version=$(cat "$config_file" 2> /dev/null)
+    config_version=$(cat "$config_file")
+fi
+
+if [ -f ${updates_dir}/${config_version} ] ; then
+    >&2 echo "${script_name}: Current version file \"$config_version\" does not found in $updates_dir"
+    exit 1
 fi
 
 updates=($(ls -1v "$updates_dir"))
@@ -52,11 +57,8 @@ act_updates=($(
 install_updates=($(
     if [ ! -z "${act_updates}" ]; then
         echo "${act_updates[@]:1}"
-    elif [ ! -f $config_file ]; then
+    elif [ ! -f $config_file ]; then # if version.conf is not exist, install all updates
         echo "${updates[@]}"
-    else
-        >&2 echo "${script_name}: Current version file \"$config_version\" does found in $updates_dir"
-        exit 1
     fi
 ))
 
