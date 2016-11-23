@@ -6,11 +6,11 @@
 # Load default environment variables
 image_env || exit 1
 
-# Conncet directories and files
-image_map || exit 1
-
 # Install updates if neded
 image_update
+
+# Conncet directories and files
+image_stor || exit 1
 
 # Start services
 image_services_start || exit 1
