@@ -39,7 +39,7 @@ if [ -f "$config_file" ]; then
     config_version=$(cat "$config_file")
 fi
 
-if [ -f ${updates_dir}/${config_version} ] ; then
+if [ ! -f ${updates_dir}/${config_version} ] ; then
     >&2 echo "${script_name}: Current version file \"$config_version\" does not found in $updates_dir"
     exit 1
 fi
