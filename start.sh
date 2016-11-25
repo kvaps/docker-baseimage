@@ -7,7 +7,9 @@
 image_env || exit 1
 
 # Install updates if neded
-image_update
+if [ -f '/etc/image/version.conf' ]; then
+    image_update || exit 1
+fi
 
 # Conncet directories and files
 image_stor || exit 1
