@@ -3,7 +3,7 @@
 # Updates installing script.
 #
 # Usage:
-#     image_update [DIRECTORY] [CONFIG]
+#     image_update [CONFIG] [DIRECTORY]
 #
 
 script_name="$(basename $0)"
@@ -11,8 +11,8 @@ config_name="version.conf"
 updates_name="update"
 
 # Checking updates dir
-if [ ! -z $1 ]; then
-    updates_dir="$1"
+if [ ! -z $2 ]; then
+    updates_dir="$2"
 elif [ -d $updates_name ]; then
     updates_dir="$updates_name"
 elif [ -d /etc/image/$updates_name ]; then
@@ -20,8 +20,8 @@ elif [ -d /etc/image/$updates_name ]; then
 fi
 
 # Checking version config
-if [ ! -z $2 ]; then
-    config_file="$2"
+if [ ! -z $1 ]; then
+    config_file="$1"
 elif [ -f $config_name ]; then
     config_file="$config_name"
 else
@@ -39,7 +39,8 @@ if [ -f "$config_file" ]; then
     config_version=$(cat "$config_file")
 else
     echo Configuration version file is not exist.
-    exit 0
+    >&2 echo "${script_name}: Cannot load $config_file: file is not exist."
+    exit 1
 fi
 
 if [ ! -f ${updates_dir}/${config_version} ] ; then
