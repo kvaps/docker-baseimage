@@ -37,6 +37,9 @@ fi
 
 if [ -f "$config_file" ]; then
     config_version=$(cat "$config_file")
+else
+    echo Configuration version file is not exist.
+    exit 0
 fi
 
 if [ ! -f ${updates_dir}/${config_version} ] ; then
@@ -57,8 +60,6 @@ act_updates=($(
 install_updates=($(
     if [ ! -z "${act_updates}" ]; then
         echo "${act_updates[@]:1}"
-    elif [ ! -f $config_file ]; then # if version.conf is not exist, install all updates
-        echo "${updates[@]}"
     fi
 ))
 
