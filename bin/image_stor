@@ -89,7 +89,7 @@ else
                fi
            else
                echo -n '(link) '
-               mv $dir $dir.dist
+               mv $dir $dir.dist 2> /dev/null
                ln -s $newdir $dir || exit 1
            fi
            echo
